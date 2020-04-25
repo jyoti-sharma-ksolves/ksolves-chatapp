@@ -1,0 +1,4 @@
+GET http://localhost:8000/api/
+
+####
+GET http://loaclhost:8000/api/receive-message
