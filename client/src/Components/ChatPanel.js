@@ -1,5 +1,5 @@
 import React from 'react';
-import moment from 'react-moment';
+import moment from 'moment';
 
 class ChatPanel extends React.Component {
   constructor (props) {
@@ -28,7 +28,7 @@ class ChatPanel extends React.Component {
           sender_id,
           receiver_id,
           message: value,
-          created_at: new Date (),
+          created_at: moment(new Date()).format(),
         }),
       })
         .then (response => response.json ())
@@ -50,11 +50,11 @@ class ChatPanel extends React.Component {
   };
 
   timeFor = (time) => {
+    console.log(time);
     const datef = new Date(time).toString();
     const dateArray = datef.split(' ');
-    const dateLocal = new Date().toLocaleString("en-IN", {timeZone: "Asia/Kolkata", hour12: true});
-    const dateLocalArray = dateLocal.split(',')[1];
-    const hours = `${dateLocalArray.split(':')[0]}:${dateLocalArray.split(':')[1]} ${dateLocalArray.split(' ')[2]}`;
+    const hours = moment(new Date(time)).format('h:mm a');
+
     return {
       date: dateArray[1],
       month: dateArray[2],
