@@ -49,21 +49,18 @@ class ChatPanel extends React.Component {
     }
   };
 
-  //    timeFormat = (time) => {
-  //       const createdDate = new Date(time).toLocaleString();
-  //       const dateArr = createdDate.split(',')
-  //       const date = dateArr[0].replace('/', ' ')
-  //       const month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-  //       const dateStr = date.split(' ');
-  //       const monthInt = dateStr[1].startsWith(0) ? dateStr[1].replace('0','') : dateStr[1];
-  //       dateStr[1] = month['monthInt'];
-  //       dateStr.join();
-
-  //       return {
-  //           date: dateStr.join(' '),
-  //           hours: dateArr[1],
-  //       }
-  //     }
+  timeFor = (time) => {
+    const datef = new Date(time).toString();
+    const dateArray = datef.split(' ');
+    const dateLocal = new Date().toLocaleString("en-IN", {timeZone: "Asia/Kolkata", hour12: true});
+    const dateLocalArray = dateLocal.split(',')[1];
+    const hours = `${dateLocalArray.split(':')[0]}:${dateLocalArray.split(':')[1]} ${dateLocalArray.split(' ')[2]}`;
+    return {
+      date: dateArray[1],
+      month: dateArray[2],
+      hours
+    }
+  }
 
   render () {
     const {user, chatData, receiver} = this.props;
@@ -73,17 +70,17 @@ class ChatPanel extends React.Component {
         <div className="mesgs">
           <div className="msg_history">
             {chatData.length > 0 &&
-              chatData.map (item => {
+              chatData.map ((item, index) => {
                 return item.sender_id === user.id
-                  ? <div className="outgoing_msg">
+                  ? <div className="outgoing_msg" key={index}>
                       <div className="sent_msg">
                         <p>{item.body}</p>
                         <span className="time_date">
-                          25 Apr | 4:21 pm
+                         {this.timeFor(item.created_at).date} {this.timeFor(item.created_at).month} | {this.timeFor(item.created_at).hours}
                         </span>
                       </div>
                     </div>
-                  : <div className="incoming_msg">
+                  : <div className="incoming_msg" key={index}>
                       <div className="incoming_msg_img">
                         {' '}
                         <img src="https://ptetutorials.com/images/user-profile.png" />
@@ -93,7 +90,7 @@ class ChatPanel extends React.Component {
                         <div className="received_withd_msg">
                           <p>{item.body}</p>
                           <span className="time_date">
-                            25 Apr | 4:21 pm
+                            {this.timeFor(item.created_at).date} {this.timeFor(item.created_at).month} | {this.timeFor(item.created_at).hours}
                           </span>
                         </div>
                       </div>

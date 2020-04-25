@@ -81,14 +81,14 @@ class ChatRoom extends React.Component {
   render () {
     const {user, chatData, receiver_id, userList} = this.state;
     return (
-      <div class="container">
-        <h3 class="text-center">Messaging</h3>
+      <div className="container">
+        <h3 className="text-center">Messaging</h3>
         <div className="header">
           <Header user={user} selectedUser={userList} receiver={receiver_id} />
         </div>
-        <div class="messaging">
-          <div class="inbox_msg">
-            <div class="inbox_people">
+        <div className="messaging">
+          <div className="inbox_msg">
+            <div className="inbox_people">
               <UserList
                 user={user}
                 userList={userList}
