@@ -15,6 +15,9 @@ class ChatRoom extends React.Component {
       userList: [],
       receiver_id: '',
       chatData: [],
+      value: '',
+      searchList: [],
+      showUserList: [],
     };
   }
 
@@ -29,7 +32,11 @@ class ChatRoom extends React.Component {
 
   async componentDidMount () {
     const userList = await this.getData ('http://localhost:8000/api/user-list');
-    this.setState ({userList: userList, receiver_id: userList[0].id});
+    this.setState ({
+      userList: userList,
+      showUserList: userList,
+      receiver_id: userList[0].id
+    });
 
     setInterval (() => {
       this.getChatData ();
@@ -78,25 +85,69 @@ class ChatRoom extends React.Component {
       });
   };
 
+  handleChange =(e) => {
+   this.setState({value: e.target.value});
+  }
+
+  search =(e) => {
+   const { value, userList } = this.state;
+   const searchUser = userList.filter(item => {
+     if (item.first_name.includes(value)) {
+       return item;
+     }
+   })
+
+    this.setState({showUserList: searchUser});
+  }
+
+  handleSearch = (e) => {
+    console.log(e)
+   if (e.charCode === 13) {
+     this.search();
+   }
+  }
+
   render () {
-    const {user, chatData, receiver_id, userList} = this.state;
+    const {user, chatData, receiver_id, userList, showUserList} = this.state;
     return (
       <div className="container">
-        <h3 className="text-center">Messaging</h3>
-        <div className="header">
+        {/* <h3 className="text-center">Messaging</h3> */}
+        {/* <div className="header">
           <Header user={user} selectedUser={userList} receiver={receiver_id} />
-        </div>
+        </div> */}
         <div className="messaging">
           <div className="inbox_msg">
             <div className="inbox_people">
-              <UserList
-                user={user}
-                userList={userList}
-                receiver={this.receiver}
-                receiverId={receiver_id}
-              />
+            <div className="headind_chat">
+                <div className="recent_heading">
+                  <h4>People</h4>
+                </div>
+                <div className="srch_bar">
+                  <div className="stylish-input-group">
+                    <input
+                      type="text"
+                      className="search-bar"
+                      value={this.state.value}
+                      onChange={this.handleChange}
+                      onKeyPress={this.handleSearch}
+                      placeholder="Search"
+                    />
+                    {/* <span className="input-group-addon">
+                    <button type="button" onClick={this.search}>Search</button>
+                    </span> */}
+                  </div>
+                </div>
+              </div>
+              <div className="inbox_chat">
+                <UserList
+                  user={user}
+                  userList={showUserList}
+                  receiver={this.receiver}
+                  receiverId={receiver_id}
+                />
+              </div>
             </div>
-            <ChatPanel user={user} chatData={chatData} receiver={receiver_id} />
+            <ChatPanel user={user} chatData={chatData} userList={userList} receiver={receiver_id} />
           </div>
         </div>
       </div>

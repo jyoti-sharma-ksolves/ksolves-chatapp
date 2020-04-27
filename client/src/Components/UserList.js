@@ -19,7 +19,7 @@ class UserList extends React.Component {
     userList = userList.filter (item => item.id !== user.id);
 
     return (
-      <div className="inbox-chat">
+      <div>
         {userList &&
           userList.map (item => {
             return (

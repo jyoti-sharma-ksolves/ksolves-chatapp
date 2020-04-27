@@ -47,7 +47,7 @@ form div {
     width: 40%;
 }
 .inbox_chat {
-    height: 550px !important;
+    height: 602px !important;
     overflow-y: scroll !important;
 }
 img {
@@ -148,7 +148,6 @@ img{ max-width:100%;}
   float: left;
   overflow: auto;
   width: 25%; border-right:1px solid #c4c4c4;
-  height: 597px;
 }
 .inbox_msg {
     border: 1px solid #c4c4c4;
@@ -189,3 +188,35 @@ h5 {
 .received_withd_msg {
     margin-bottom: 22px;
 }
+.word-wrap {
+    overflow-wrap: break-word;
+}
+.recent_heading {
+    float: left !important;
+    width:40% !important;
+}
+.headind_chat{ padding:10px 29px 10px 20px; overflow:hidden; border-bottom:1px solid #c4c4c4;}
+.srch_bar {
+    display: inline-block;
+    text-align: right;
+    width: 60%;
+    margin-top: 14px;
+    margin-left: -34px;
+}
+.srch_bar input{
+    border: 1px solid #cdcdcd;
+    border-width: 1px 1px 1px 1px;
+    width: 80%;
+    padding: 7px 9px 7px 9px;
+    background: none;
+    border-radius: 16px;
+    outline: none;
+}
+.srch_bar .input-group-addon button {
+    background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+    border: medium none;
+    padding: 0;
+    color: #707070;
+    font-size: 18px;
+  }
+  .srch_bar .input-group-addon { margin: 0 0 0 -27px;}

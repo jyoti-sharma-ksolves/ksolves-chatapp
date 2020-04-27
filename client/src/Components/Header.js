@@ -7,13 +7,14 @@ class Header extends React.Component {
 
   render () {
     const {selectedUser, receiver, user} = this.props;
+
     const receiverInfo =
       selectedUser && selectedUser.filter (item => item.id === receiver);
 
     return (
       <div>
-        {receiverInfo.length > 0 && <div className="inline-display mr">{receiverInfo[0].first_name}{' '}{receiverInfo[0].last_name}</div>}
-        {Object.keys(user).length > 0 &&
+        {receiverInfo && receiverInfo.length > 0 && <div className="inline-display mr">{receiverInfo[0].first_name}{' '}{receiverInfo[0].last_name}</div>}
+        {user && user.id &&
           <React.Fragment>
             <div className="inline-display">{user.first_name}{' '}{user.last_name}
             </div>

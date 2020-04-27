@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import Header from '../Components/Header';
 
 class ChatPanel extends React.Component {
   constructor (props) {
@@ -7,7 +8,7 @@ class ChatPanel extends React.Component {
 
     this.state = {
       value: '',
-      receiver_id: 2,
+      receiver_id: '',
       chatData: [],
     };
   }
@@ -50,7 +51,6 @@ class ChatPanel extends React.Component {
   };
 
   timeFor = (time) => {
-    console.log(time);
     const datef = new Date(time).toString();
     const dateArray = datef.split(' ');
     const hours = moment(new Date(time)).format('h:mm a');
@@ -63,17 +63,20 @@ class ChatPanel extends React.Component {
   }
 
   render () {
-    const {user, chatData, receiver} = this.props;
-
+    const {user, chatData, receiver, userList} = this.props;
+    
     return (
       <div>
+        <div className="header">
+          <Header user={user} selectedUser={userList} receiver={receiver} />
+        </div>
         <div className="mesgs">
           <div className="msg_history">
             {chatData.length > 0 &&
               chatData.map ((item, index) => {
                 return item.sender_id === user.id
                   ? <div className="outgoing_msg" key={index}>
-                      <div className="sent_msg">
+                      <div className="sent_msg word-wrap">
                         <p>{item.body}</p>
                         <span className="time_date">
                          {this.timeFor(item.created_at).date} {this.timeFor(item.created_at).month} | {this.timeFor(item.created_at).hours}
@@ -87,7 +90,7 @@ class ChatPanel extends React.Component {
                         {' '}
                       </div>
                       <div className="received_msg">
-                        <div className="received_withd_msg">
+                        <div className="received_withd_msg word-wrap">
                           <p>{item.body}</p>
                           <span className="time_date">
                             {this.timeFor(item.created_at).date} {this.timeFor(item.created_at).month} | {this.timeFor(item.created_at).hours}
