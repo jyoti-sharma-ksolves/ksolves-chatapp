@@ -5,6 +5,7 @@ import './App.css';
 import SignUp from './views/SignUp';
 import SignIn from './views/SignIn';
 import ChatRoom from './views/ChatRoom';
+import PrivateRoute from './views/PrivateRoute';
 
 class App extends React.Component {
   render () {
@@ -13,13 +14,9 @@ class App extends React.Component {
         <Router>
           <Switch>
 
-            <Route exact path="/">
-              <SignUp />
-            </Route>
+            <PrivateRoute exact path="/" component={SignUp} />
 
-            <Route exact path="/sign-in">
-              <SignIn />
-            </Route>
+            <PrivateRoute exact path="/sign-in" component={SignIn} />
 
             <Route exact path="/chatroom">
               <ChatRoom />

@@ -220,3 +220,6 @@ h5 {
     font-size: 18px;
   }
   .srch_bar .input-group-addon { margin: 0 0 0 -27px;}
+  .profile_header {
+    text-align: center;
+  }
