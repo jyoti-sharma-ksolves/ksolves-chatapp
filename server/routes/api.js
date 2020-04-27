@@ -148,7 +148,7 @@ router.post('/send-message', function(req, res, next) {
 })
 
 router.get('/user-list', function(req, res, next) {
-  const query = `SELECT id,first_name,last_name,created_at FROM user_table`;
+  const query = `SELECT id,first_name,last_name,created_at FROM user_table ORDER BY id DESC`;
   
   connection.pool.query(query, (err, result) => {
     console.log(err, res);
