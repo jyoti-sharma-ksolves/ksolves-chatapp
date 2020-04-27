@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import Header from '../Components/Header';
 
 class ChatPanel extends React.Component {
   constructor (props) {
@@ -9,6 +10,7 @@ class ChatPanel extends React.Component {
       value: '',
       receiver_id: 2,
       chatData: [],
+      errorMessage: '',
     };
   }
 
@@ -17,7 +19,7 @@ class ChatPanel extends React.Component {
     const receiver_id = this.props.receiver;
     const {value} = this.state;
 
-    if (value && value.length < 200) {
+    if (value) {
       fetch ('http://localhost:8000/api/send-message', {
         headers: {
           'content-type': 'application/json',
@@ -32,8 +34,14 @@ class ChatPanel extends React.Component {
         }),
       })
         .then (response => response.json ())
-        .catch (e => {
-          console.log (e);
+        .then(jsondata => {
+          if (jsondata.err) {
+            this.setState({errorMessage: jsondata.err});
+          }
+        })
+        .catch (err => {
+          console.log (err);
+          this.setState({errorMessage: err});
         });
     }
     this.setState ({value: ''});
@@ -63,17 +71,20 @@ class ChatPanel extends React.Component {
   }
 
   render () {
-    const {user, chatData, receiver} = this.props;
+    const {user, chatData, receiver, userList} = this.props;
 
     return (
       <div>
+        <div className="header">
+          <Header user={user} selectedUser={userList} receiver={receiver} />
+        </div>
         <div className="mesgs">
           <div className="msg_history">
             {chatData.length > 0 &&
               chatData.map ((item, index) => {
                 return item.sender_id === user.id
                   ? <div className="outgoing_msg" key={index}>
-                      <div className="sent_msg">
+                      <div className="sent_msg word-wrap">
                         <p>{item.body}</p>
                         <span className="time_date">
                          {this.timeFor(item.created_at).date} {this.timeFor(item.created_at).month} | {this.timeFor(item.created_at).hours}
@@ -87,7 +98,7 @@ class ChatPanel extends React.Component {
                         {' '}
                       </div>
                       <div className="received_msg">
-                        <div className="received_withd_msg">
+                        <div className="received_withd_msg word-wrap">
                           <p>{item.body}</p>
                           <span className="time_date">
                             {this.timeFor(item.created_at).date} {this.timeFor(item.created_at).month} | {this.timeFor(item.created_at).hours}
@@ -99,14 +110,30 @@ class ChatPanel extends React.Component {
           </div>
           <div className="type_msg">
             <div className="input_msg_write">
-              <input
+              {/* <input
                 type="text"
                 className="write_msg"
                 placeholder="Type a message"
                 value={this.state.value}
                 onChange={this.handleOnChange}
                 onKeyPress={this.handleKeyPress}
-              />
+              /> */}
+              <textarea
+                autoFocus
+                cols="127"
+                // rows="2"
+                // width="124px"
+                // height="20px"
+                // padding="10px"
+                className="write_msg"
+                maxLength="200"
+                placeholder="Type a message"
+                required
+                value={this.state.value}
+                onChange={this.handleOnChange}
+                onKeyPress={this.handleKeyPress}
+              >
+              </textarea>
               <button
                 className="msg_send_btn"
                 type="button"

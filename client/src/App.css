@@ -47,7 +47,7 @@ form div {
     width: 40%;
 }
 .inbox_chat {
-    height: 550px !important;
+    height: 602px !important;
     overflow-y: scroll !important;
 }
 img {
@@ -88,12 +88,14 @@ img {
 }
 .received_withd_msg p {
     background: #ebebeb none repeat scroll 0 0;
-    border-radius: 3px;
+    border-radius: 5px;
     color: #646464;
-    font-size: 14px;
+    font-size: 16px;
     margin: 0;
     padding: 12px 12px 12px 12px;
-    width: 54%;
+    width: 52%;
+    line-height: 1.5;
+    font-family: sans-serif;
 }
 .time_date {
     color: #747474;
@@ -103,11 +105,14 @@ img {
 }
 .sent_msg p {
     background: #05728f none repeat scroll 0 0;
-    border-radius: 3px;
-    font-size: 14px;
-    margin: 0; color:#fff;
+    border-radius: 5px;
+    font-size: 16px;
+    margin: 0;
+    color: #fff;
     padding: 12px 12px 12px 12px;
-    width:100%;
+    width: 91%;
+    font-family: sans-serif;
+    line-height: 1.5;
 }
 .outgoing_msg{ overflow:hidden; margin:26px 0 26px;}
 .sent_msg {
@@ -122,11 +127,12 @@ img {
   color: #fff;
   cursor: pointer;
   font-size: 10px;
-  height: 33px;
+  height: 45px;
   position: absolute;
   right: 0;
   top: 11px;
-  width: 33px;
+  width: 45px;
+  margin-top: -8px;
 }
 .input_msg_write input {
     background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
@@ -148,7 +154,6 @@ img{ max-width:100%;}
   float: left;
   overflow: auto;
   width: 25%; border-right:1px solid #c4c4c4;
-  height: 597px;
 }
 .inbox_msg {
     border: 1px solid #c4c4c4;
@@ -189,3 +194,23 @@ h5 {
 .received_withd_msg {
     margin-bottom: 22px;
 }
+.word-wrap {
+    overflow-wrap: break-word;
+}
+.write_msg {
+    padding: 10px !important;
+    width: 92%;
+    height: 30px;
+    border: none;
+    outline: none;
+    resize: none;
+    overflow: hidden;
+}
+textarea:focus {
+    border-bottom: 2px solid rgb(0, 188, 212);
+}
+.recent_heading {
+    float: left !important;
+    width:40% !important;
+}
+.headind_chat{ padding:10px 29px 10px 20px; overflow:hidden; border-bottom:1px solid #c4c4c4;}

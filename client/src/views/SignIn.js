@@ -61,7 +61,7 @@ class SignIn extends React.Component {
         .then(response => response.json())
         .then(jsonData => {
           if(jsonData && jsonData.accessToken) {
-            this.setState({ result: jsonData });
+            this.setState({ result: jsonData.result });
 
             localStorage.setItem('document', JSON.stringify(this.state.result));
             this.props.history.push('/chatroom');

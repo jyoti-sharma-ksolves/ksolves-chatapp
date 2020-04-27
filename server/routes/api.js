@@ -20,7 +20,6 @@ router.post('/sign-up', function(req, res, next) {
   const query2 = `INSERT INTO user_table (first_name, last_name, email_, password) VALUES ('${fname}', '${lname}', '${email}', '${pwd}')`;
   
   connection.pool.query(query1, (err, result) => {
-    console.log(err, result);
     if(err) {
       return res.send(err);
     }
@@ -56,7 +55,6 @@ router.post('/sign-in', function(req, res, next) {
   const query = `SELECT * FROM user_table WHERE email_='${email}'`;
 
   connection.pool.query(query, (err, result) => {
-    console.log(err, res);
     if(err) {
       res.send(err);
     }
@@ -90,75 +88,135 @@ router.post('/sign-in', function(req, res, next) {
 })
 
 router.get('/user-info', function(req, res, next) {
-  const id = req.query.id;
-  
-  const query = `SELECT * FROM user_table WHERE id='${id}'`;
+  try {
+    const id = req.query.id;
 
-  connection.pool.query(query, (err, result) => {
-    console.log(err, res);
-    if(err) {
-      res.send(err);
+    if (!id) {
+      return res.status(400);
     }
-    else {
-      if (result.rowCount === 1) {
-        const userInfo = result.rows[0];
-        res.send({ result: userInfo });
+  
+    const query = `SELECT * FROM user_table WHERE id=${id}`;
+
+    connection.pool.query(query, (err, result) => {
+      if(err) {
+        throw err;
       }
       else {
-        res.send({ message: 'USER NOT EXIST' })
+        if (result.rowCount !== 1) {
+          return res.status(200).json({
+            status: 'Success',
+            message: 'USER NOT EXIST'
+          })
+        }
+        else {
+          res.status(200).json({
+            status: 'Success',
+            result: result.rows[0]
+          });
+        }
       }
-    }
-  });
+    });
+  }
+  catch (err) {
+    res.status(500)
+       .json({
+         status: "Failed",
+         error: err
+       })
+  }
 })
 
 router.get('/receive-message', function(req, res, next) {
-  const sender_id = req.query.sender_id;
-  const receiver_id = req.query.receiver_id;
-  
-  const query = `SELECT * FROM chats_table WHERE (sender_id='${sender_id}' AND receiver_id='${receiver_id}') OR (sender_id='${receiver_id}' AND receiver_id='${sender_id}')`;
+  try {
+    const sender_id = req.query.sender_id;
+    const receiver_id = req.query.receiver_id;
 
-  connection.pool.query(query, (err, result) => {
-    console.log(err, res);
-    if(err) {
-      res.send(err);
+    if (!sender_id || !receiver_id) {
+      return res.status(400);
     }
-    else {
-      res.send(result.rows);
-    }
-  });
+  
+    const query = `SELECT * FROM chats_table WHERE (sender_id='${sender_id}' AND receiver_id='${receiver_id}') OR (sender_id='${receiver_id}' AND receiver_id='${sender_id}')`;
+
+    connection.pool.query(query, (err, result) => {
+      if(err) {
+        throw err;
+      }
+      else {
+        res.json({
+          status: "Success",
+          result: result.rows
+        });
+      }
+    });
+  }
+  catch (err) {
+    res.status(500)
+       .json({
+         status: "Failed",
+         error: err
+       })
+  }
 })
 
 router.post('/send-message', function(req, res, next) {
-  const senderId = req.body.sender_id;
-  const receiverId = req.body.receiver_id;
-  const body = req.body.message;
-  const createdAt = req.body.created_at;
+  try {
+    const senderId = req.body.sender_id;
+    const receiverId = req.body.receiver_id;
+    const body = req.body.message;
+    const createdAt = req.body.created_at;
 
-  const query = `INSERT INTO chats_table(sender_id, receiver_id, body, created_at) VALUES (${senderId},${receiverId},'${body}','${createdAt}')`;
+    if (!senderId || !receiverId || !body || !createdAt) {
+      return res.status(400);
+    }
   
-  connection.pool.query(query, (err, result) => {
-    console.log(err, res);
-    if(err) {
-      res.send(err);
-    }
-    else {
-      res.json(result.rowCount);
-    }
-  });
+    const query = `INSERT INTO chats_table(sender_id, receiver_id, body, created_at) VALUES (${senderId},${receiverId},'${body}','${createdAt}')`;
+    
+    connection.pool.query(query, (err, result) => {
+      if(err) {
+        throw err;
+      }
+      else {
+        res.json({
+          status: "Success",
+          result: result.rowCount
+        });
+      }
+    });
+  }
+  catch (err) {
+    res.status(500)
+       .json({
+         status: "Failed",
+         error: err
+       })
+  }
 })
 
 router.get('/user-list', function(req, res, next) {
   const query = `SELECT id,first_name,last_name,created_at FROM user_table`;
   
-  connection.pool.query(query, (err, result) => {
-    console.log(err, res);
-    if(err) {
-      res.send(err);
-    }
-    else {
-      res.send(result.rows);
-    }
-  });
+  try {
+    connection.pool.query(query, (err, result) => {
+      console.log(err, result, '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
+      if(err) {
+        throw err;
+      }
+      else {
+        res.status(200)
+           .json({
+            status: 'Success',
+            result: result.rows
+           });
+      }
+    });
+  }
+  catch (err) {
+    res.status(500)
+       .json({
+         status: "Failed",
+         error: err
+       })
+  } 
 })
 
 module.exports = router;
