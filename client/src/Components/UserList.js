@@ -16,10 +16,12 @@ class UserList extends React.Component {
 
   render () {
     let {userList, receiver, user} = this.props;
-    userList = userList.filter (item => item.id !== user.id);
+  
+    userList = userList.length > 0 && user && userList.filter (item => item.id !== user.id);
+    console.log(userList, '&&&')
 
     return (
-      <div className="inbox-chat">
+      <div>
         {userList &&
           userList.map (item => {
             return (
