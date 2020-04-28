@@ -64,11 +64,10 @@ class ChatPanel extends React.Component {
 
   render () {
     const {user, chatData, receiver, userList} = this.props;
-    
     return (
       <div>
         <div className="header">
-          <Header user={user} selectedUser={userList} receiver={receiver} />
+          <Header user={user} selectedUser={userList} receiver={receiver} history={this.props.history} />
         </div>
         <div className="mesgs">
           <div className="msg_history">
@@ -86,7 +85,7 @@ class ChatPanel extends React.Component {
                   : <div className="incoming_msg" key={index}>
                       <div className="incoming_msg_img">
                         {' '}
-                        <img src="https://ptetutorials.com/images/user-profile.png" />
+                        <img src="https://ptetutorials.com/images/user-profile.png" alt="profile" />
                         {' '}
                       </div>
                       <div className="received_msg">

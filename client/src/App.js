@@ -14,13 +14,11 @@ class App extends React.Component {
         <Router>
           <Switch>
 
-            <PrivateRoute exact path="/" component={SignUp} />
+            <Route exact path="/" component={SignUp} />
 
-            <PrivateRoute exact path="/sign-in" component={SignIn} />
+            <Route exact path="/sign-in" component={SignIn} />
 
-            <Route exact path="/chatroom">
-              <ChatRoom />
-            </Route>
+            <Route exact path="/chatroom" component={ChatRoom} />
 
           </Switch>
         </Router>

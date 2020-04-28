@@ -5,74 +5,85 @@ import RaisedButton from "material-ui/RaisedButton";
 import TextField from "material-ui/TextField";
 
 class SignIn extends React.Component {
-    constructor() {
-        super();
+  constructor() {
+    super();
     
-        this.state = {
-          user: {
-            firstName: '',
-            lastName: '',
-            email: '',
-            password: '',
-          },
-          result: {},
-          errors: {},
-        };
+    this.state = {
+      user: {
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+      },
+      result: {},
+      errors: {},
+    };
+  }
+
+  componentWillMount () {
+    if (localStorage.getItem('document')) {
+      this.props.history.push('/chatroom');
     }
+  }
+  
+  onChange = (e) => {
+    this.setState({errors: {email: ''}});
+    const fieldName = e.target.name;
+    const user = this.state.user;
     
-    onChange = (e) => {
-        console.log(e.target.name, 'aaaa')
-        const fieldName = e.target.name;
-        const user = this.state.user;
-
-        user[fieldName] = e.target.value;
-
-        this.setState({ user });
-    }
-
-    onPwChange = (e) => {
-        console.log(e.target.value, 'bbbb');
-        const fieldName = e.target.name;
-        const user = this.state.user;
-
-        user[fieldName] = e.target.value;
+    user[fieldName] = e.target.value;
+    
+    this.setState({ user });
+  }
+  
+  onPwChange = (e) => {
+    this.setState({errors: {email: ''}});
+    const fieldName = e.target.name;
+    const user = this.state.user;
+    
+    user[fieldName] = e.target.value;
+    
+    this.setState({ user });
+  }
+  
+  onSubmit = async(e) => {
+    e.preventDefault();
+    
+    const { email, password } = this.state.user;
+    const url = 'http://localhost:8000/api/sign-in';
+    
+    await fetch( url, {
+      headers: {
+        'content-type': 'application/json',
+        accept: 'application/json',
+      },
+      method: 'POST',
+      body: JSON.stringify({ 
+        email,
+        password,
+      }),
+    })
+    .then(response => response.json())
+    .then(jsonData => {
+      if(jsonData && jsonData.accessToken) {
+        this.setState({ result: jsonData.result });
         
-        this.setState({ user });
-    }
-
-    onSubmit = async(e) => {
-        e.preventDefault();
-
-        const { email, password } = this.state.user;
-        // const { result } = this.state;
-        const url = 'http://localhost:8000/api/sign-in';
-
-        await fetch( url, {
-            headers: {
-              'content-type': 'application/json',
-              accept: 'application/json',
-            },
-            method: 'POST',
-            body: JSON.stringify({ 
-                email,
-                password,
-            }),
-        })
-        .then(response => response.json())
-        .then(jsonData => {
-          if(jsonData && jsonData.accessToken) {
-            this.setState({ result: jsonData });
-
-            localStorage.setItem('document', JSON.stringify(this.state.result));
-            this.props.history.push('/chatroom');
-          }
-        })
-        .catch(error => {
-            console.error(error);
-        })
-    }
-    
-    render() {
+        localStorage.setItem('document', JSON.stringify(this.state.result));
+        this.props.history.push('/chatroom');
+      }
+      else if (jsonData.message === 'USER NOT EXIST') {
+        this.setState({errors: {email: 'User not exist.'}})
+      }
+      else if (jsonData.message === 'password incorrect') {
+        this.setState({errors: {password: 'Password incorrect.'}})
+      }
+    })
+    .catch(error => {
+      console.error(error);
+    })
+  }
+  
+  render() {
         const {
             email,
             password
@@ -87,10 +98,12 @@ class SignIn extends React.Component {
               <form onSubmit={this.onSubmit}>
                 <TextField
                   name="email"
+                  type="email"
                   floatingLabelText="email"
                   value={email}
                   onChange={this.onChange}
                   errorText={errors.email}
+                  required
                 />
                 <TextField
                   type="password"
@@ -99,6 +112,7 @@ class SignIn extends React.Component {
                   value={password}
                   onChange={this.onPwChange}
                   errorText={errors.password}
+                  required
                 />
                 <br />
                 <RaisedButton

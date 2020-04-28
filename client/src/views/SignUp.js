@@ -5,8 +5,8 @@ import RaisedButton from "material-ui/RaisedButton";
 import TextField from "material-ui/TextField";
 
 class SignUp extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
     
         this.state = {
           user: {
@@ -19,9 +19,14 @@ class SignUp extends React.Component {
           errors: {},
         };
     }
+
+    componentWillMount () {
+      if (localStorage.getItem('document')) {
+        this.props.history.push('/chatroom');
+      }
+    }
     
     onChange = (e) => {
-        console.log(e.target.name, 'aaaa')
         const fieldName = e.target.name;
         const user = this.state.user;
 
@@ -35,12 +40,12 @@ class SignUp extends React.Component {
         if (fieldName === 'pwconfirm') {
           const message = 'Password mismatch';
           return this.state.user.password === e.target.value ?
-          this.setState({ errors: { pwconfirm: ''} }) : this.setState({ errors: { pwconfirm: message} }); ;
+          this.setState({ errors: { pwconfirm: ''} }) : this.setState({ errors: { pwconfirm: message } }); ;
         }
+
     }
 
     onPwChange = (e) => {
-        console.log(e.target.value, 'bbbb');
         const fieldName = e.target.name;
         const user = this.state.user;
 
@@ -70,7 +75,12 @@ class SignUp extends React.Component {
     onSubmit = async(e) => {
         e.preventDefault();
         const { errors } = this.state;
-        if (errors.email && errors.password && errors.firstName && errors.lastName && errors.pwconfirm) return ;
+        if (errors.email ||
+            errors.password ||
+            errors.firstName ||
+            errors.lastName ||
+            errors.pwconfirm
+            ) return ;
 
         const { firstName, lastName, email, password } = this.state.user
         const url = 'http://localhost:8000/api/sign-up';
@@ -133,6 +143,7 @@ class SignUp extends React.Component {
                 />
                 <TextField
                   name="email"
+                  // type="email"
                   floatingLabelText="email"
                   value={email}
                   onChange={this.onChange}

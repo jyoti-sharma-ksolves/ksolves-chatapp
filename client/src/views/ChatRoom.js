@@ -1,5 +1,4 @@
 import React from 'react';
-import Header from '../Components/Header';
 import UserList from '../Components/UserList';
 import ChatPanel from '../Components/ChatPanel';
 import '../App.css';
@@ -19,23 +18,33 @@ class ChatRoom extends React.Component {
       searchList: [],
       showUserList: [],
     };
+
   }
 
   async componentWillMount () {
     const user = JSON.parse (localStorage.getItem ('document'));
+    
+    if (user) {
+      const userInfo = await this.getData (
+        `http://localhost:8000/api/user-info?id=${user.id}`
+      );
+      this.setState ({user: userInfo.result});
+    }
+    else {
+      this.props.history.push('/sign-in')
+    }
 
-    const userInfo = await this.getData (
-      `http://localhost:8000/api/user-info?id=${user.result.id}`
-    );
-    this.setState ({user: userInfo.result});
   }
 
   async componentDidMount () {
     const userList = await this.getData ('http://localhost:8000/api/user-list');
+
+    const data = userList.filter(item => item.id !== this.state.user.id);
+    
     this.setState ({
-      userList: userList,
+      userList: data,
       showUserList: userList,
-      receiver_id: userList[0].id
+      receiver_id: data[0].id
     });
 
     setInterval (() => {
@@ -101,7 +110,6 @@ class ChatRoom extends React.Component {
   }
 
   handleSearch = (e) => {
-    console.log(e)
    if (e.charCode === 13) {
      this.search();
    }
@@ -111,10 +119,6 @@ class ChatRoom extends React.Component {
     const {user, chatData, receiver_id, userList, showUserList} = this.state;
     return (
       <div className="container">
-        {/* <h3 className="text-center">Messaging</h3> */}
-        {/* <div className="header">
-          <Header user={user} selectedUser={userList} receiver={receiver_id} />
-        </div> */}
         <div className="messaging">
           <div className="inbox_msg">
             <div className="inbox_people">
@@ -132,9 +136,6 @@ class ChatRoom extends React.Component {
                       onKeyPress={this.handleSearch}
                       placeholder="Search"
                     />
-                    {/* <span className="input-group-addon">
-                    <button type="button" onClick={this.search}>Search</button>
-                    </span> */}
                   </div>
                 </div>
               </div>
@@ -147,7 +148,13 @@ class ChatRoom extends React.Component {
                 />
               </div>
             </div>
-            <ChatPanel user={user} chatData={chatData} userList={userList} receiver={receiver_id} />
+            <ChatPanel
+              user={user}
+              chatData={chatData}
+              userList={userList}
+              receiver={receiver_id}
+              history={this.props.history}
+            />
           </div>
         </div>
       </div>

@@ -3,6 +3,19 @@ import React from 'react';
 class Header extends React.Component {
   constructor (props) {
     super (props);
+    
+    this.state = {
+      show: false,
+    }
+  }
+
+  showDropdown = (e) => {
+    this.setState({ show: !this.state.show });
+  }
+
+  getSelectedValue = (e) => {
+    localStorage.removeItem('document');
+    window.location.href = "http://localhost:3000/sign-in";
   }
 
   render () {
@@ -20,13 +33,17 @@ class Header extends React.Component {
             </div>
 
             <div className="user_img">
-              <div className="profile_header">
+              <div className="profile_header" onClick={this.showDropdown}>
                 {user.first_name.charAt(0).toUpperCase()}
               </div>
+              {this.state.show &&
+                <div id="myDropdown" className="dropdown-content">
+                  <div onClick={this.getSelectedValue} >Logout</div>
+                </div>
+              }
           </div>
         </React.Fragment>
-        }
-           
+        }  
       </div>
     );
   }
